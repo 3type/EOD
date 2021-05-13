@@ -547,6 +547,7 @@ class EOD(PalettePlugin):
 		else:
 			dataName = 'runtime_DoneList'
 
+		listX = []
 		if not update:
 			listX = self.runtimeDict.get(dataName, [])
 			if listX:
@@ -626,17 +627,19 @@ class EOD(PalettePlugin):
 				url = self.idsURLGithub
 			elif option == 2:
 				url = self.idsURLAlt
-
+			try:
+				idsDownload = requests.get(url, stream=True)	
+				idsData = idsDownload.content
+				with open(workDir+'/dataset/idsDict.pdata', 'wb') as fout:
+					fout.write(idsData)
+					localtime = time.asctime(time.localtime(time.time()))
+					print(localtime, 'COD idsDict downloaded')
+			except:
+				print('COD idsDict data download failed.\nPlease Try Another Mirror.')
 		try:
-			idsDownload = requests.get(url, stream=True)	
-			idsData = idsDownload.content
-			with open(workDir+'/dataset/idsDict.pdata', 'wb') as fout:
-				fout.write(idsData)
-				localtime = time.asctime(time.localtime(time.time()))
-				print(localtime, 'COD idsDict downloaded')
 			with gzip.open(workDir+'/dataset/idsDict.pdata', 'rb') as fin:
 				self.idsDict = pickle.load(fin)
-				print('COD idsDict Ready')
+			print('COD idsDict{} Readed')
 		except:
 			print('COD idsDict data missing or broken.\nPlease Try Again.')
 
