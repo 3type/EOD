@@ -1,0 +1,3 @@
+;; -*- coding: utf-8-mcs-er -*-
+U+38A4	㢤	㢤	# Buggy with '?'
+U+3C50	㱐	㱐	# Buggy with '?'
