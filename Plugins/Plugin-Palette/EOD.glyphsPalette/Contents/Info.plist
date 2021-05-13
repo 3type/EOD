@@ -17,11 +17,11 @@
 	<key>CFBundleVersion</key>
 	<string>210511</string>
 	<key>UpdateFeedURL</key>
-	<string>____OnlineUrlToThisPlist____</string>
+	<string>https://raw.githubusercontent.com/3type/EOD/master/Plugins/Plugin-Palette/EOD.glyphsPalette/Contents/Info.plist</string>
 	<key>productPageURL</key>
 	<string>https://github.com/3type/EOD</string>
 	<key>productReleaseNotes</key>
-	<string>____LatestReleaseNotes____</string>
+	<string>Have fun and take the bomb.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, 3type, 2021</string>
 	<key>NSPrincipalClass</key>
