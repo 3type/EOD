@@ -10,7 +10,7 @@
 from GlyphsApp import (Glyphs, UPDATEINTERFACE, GSGlyph, GSEditViewController)
 from GlyphsApp.plugins import PalettePlugin
 import gzip, pickle, random, itertools
-import os, time, objc
+import os, time, objc, ssl
 from urllib import request
 
 class EOD(PalettePlugin):
@@ -89,7 +89,7 @@ class EOD(PalettePlugin):
 							layer.width = layerWidth
 
 						userData_partNameNote = '部件字符：%s \n生成于：【 %s 】 \n结构型：%s' % (noteList[0], self.zi(glyphUni), noteList[1])
-						font.glyphs[partName].userData['COD_partNameNote'] = userData_partNameNote
+						font.glyphs[partName].userData['EOD_partNameNote'] = userData_partNameNote
 
 			else:
 				continue
@@ -113,7 +113,7 @@ class EOD(PalettePlugin):
 		
 		font = Glyphs.font
 		for xUni in doneList:
-			font.glyphs[xUni].tags.addObject_('COD_Done')
+			font.glyphs[xUni].tags.addObject_('EOD_Done')
 		textDone = Glyphs.localize({
 			'en': 'Glyphs done: ',
 			'zh': '已绘制：'})
@@ -301,8 +301,8 @@ class EOD(PalettePlugin):
 			targetZi = '⌀'
 			targetZiFormulaType = '○'
 
-		if thisGlyph.userData['COD_partNameNote']:
-			nameNote = thisGlyph.userData['COD_partNameNote']
+		if thisGlyph.userData['EOD_partNameNote']:
+			nameNote = thisGlyph.userData['EOD_partNameNote']
 		elif thisGlyph.unicode:
 			nameNote = self.getFormulaNote(thisGlyph.unicode)
 		else:
@@ -325,7 +325,7 @@ class EOD(PalettePlugin):
 
 	'''
 	============================================================================
-	COD self.function Zone
+	EOD self.function Zone
 	============================================================================
 	'''
 
@@ -568,9 +568,9 @@ class EOD(PalettePlugin):
 				doneStrokes = getCompStrokes(glyph)
 				if doneStrokes >= targetStrokes and glyph.unicode:
 					listX.append(glyph.unicode)
-					glyph.tags.addObject_('COD_Done')
+					glyph.tags.addObject_('EOD_Done')
 				else:
-					glyph.tags.removeObject_('COD_Done')
+					glyph.tags.removeObject_('EOD_Done')
 		self.runtimeDict[dataName] = listX
 
 		return listX
@@ -621,7 +621,7 @@ class EOD(PalettePlugin):
 		workDir = os.path.dirname(__file__)
 		with gzip.open(workDir+'/dataset/charSetDict.pdata', 'rb') as fin:
 			self.charSetDict = pickle.load(fin)
-			print('COD charSetDict Ready')
+			print('EOD charSetDict Ready')
 
 		if option:
 			if option == 1:
@@ -629,19 +629,20 @@ class EOD(PalettePlugin):
 			elif option == 2:
 				url = self.idsURLAlt
 			try:
-				with request.urlopen(url) as response:
-   					idsData = response.read()
+				context = ssl._create_unverified_context()
+				with request.urlopen(url, context=context) as response:
+						idsData = response.read()
 				with open(workDir+'/dataset/idsDict.pdata', 'wb') as fout:
 					fout.write(idsData)
 					localtime = time.asctime(time.localtime(time.time()))
-					print(localtime, 'COD idsDict downloaded')
+					print(localtime, 'EOD idsDict downloaded')
 			except:
-				print('COD idsDict data download failed.\nPlease Try Another Mirror.')
+				print('EOD idsDict data download failed.\nPlease Try Another Mirror.')
 		try:
 			with gzip.open(workDir+'/dataset/idsDict.pdata', 'rb') as fin:
 				self.idsDict = pickle.load(fin)
-			print('COD idsDict{} Readed')
+			print('EOD idsDict{} Readed')
 		except:
-			print('COD idsDict data missing or broken.\nPlease Try Again.')
+			print('EOD idsDict data missing or broken.\nPlease Try Again.')
 
 		return
