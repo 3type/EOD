@@ -4,7 +4,36 @@ EOD is a Glyphs 3 plug-in designed to improve the efficiency of Chinese font des
 
 ## Function
 
-...WORK IN PROGRESS
+### Siblings Glyphs
+'Siblings Glyphs' is a group of CJK characters share a same radical or part.
+
+Example:
+
+	䧹 in (應 譍 噟 鷹)  <--- Siblings
+	鳥 in (鷹 鴵 蔦 鵎)  <--- Also Siblings, and '鷹' in both groups.
+
+EOD give you an buttom to randomly call out the siblings for quick edit or compare the glyphs.
+
+#### Demo
+![Siblings Glyphs GIF](./img/EOD-Demo-Siblings.gif)
+
+
+### Disassemble the Glyph
+Automatically disassemble the CJK characters into radical or part glyphs.
+
+Example:
+
+	'鷹' =
+		_part.u5E7F-SfAL  <--- '广' as a part
+		+ _part.u4EBB-LR  <--- '亻' as a part
+		+ _part.u96B9-LR  <--- '隹' as a part
+		+ _part.u9CE5-Si  <--- '鳥' as a part
+
+#### Demo
+![Disassemble GIF](./img/EOD-Demo-Disassemble.gif)
+
+
+## [ ...WIP ]
 
 ## License
 
