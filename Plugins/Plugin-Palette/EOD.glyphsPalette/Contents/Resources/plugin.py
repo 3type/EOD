@@ -10,7 +10,8 @@
 from GlyphsApp import (Glyphs, UPDATEINTERFACE, GSGlyph, GSEditViewController)
 from GlyphsApp.plugins import PalettePlugin
 import gzip, pickle, random, itertools
-import os, time, objc, requests
+import os, time, objc
+from urllib import request
 
 class EOD(PalettePlugin):
 	'''
@@ -628,8 +629,8 @@ class EOD(PalettePlugin):
 			elif option == 2:
 				url = self.idsURLAlt
 			try:
-				idsDownload = requests.get(url, stream=True)	
-				idsData = idsDownload.content
+				with request.urlopen(url) as response:
+   					idsData = response.read()
 				with open(workDir+'/dataset/idsDict.pdata', 'wb') as fout:
 					fout.write(idsData)
 					localtime = time.asctime(time.localtime(time.time()))
