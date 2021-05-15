@@ -132,12 +132,12 @@ class EOD(PalettePlugin):
 		self.progCSibling.setDoubleValue_(0.0)
 
 		font = Glyphs.font
-		thisGlyphs = self.thisGlyphs()
-		if thisGlyphs:
+		if (thisGlyphs := self.thisGlyphs()):
 			thisGlyph = thisGlyphs[0]
-		thisGlyphUni = thisGlyph.unicode
-		
-		if not thisGlyphUni:
+		else:  # No selection
+			return
+
+		if not (thisGlyphUni := thisGlyph.unicode):  # No unicode glyphs
 			return
 
 		searchRange = []
