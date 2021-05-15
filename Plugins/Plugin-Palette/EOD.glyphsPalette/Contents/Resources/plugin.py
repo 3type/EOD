@@ -183,6 +183,8 @@ class EOD(PalettePlugin):
 		else:
 			font.newTab(tabText)
 		font.currentTab.textCursor = len(partStrA)
+		font.userData['EOD_siblingAmounts'] = [self.textFieldPartAAmount.intValue(), 
+			self.textFieldPartBAmount.intValue()]
 
 		self.progCSibling.setDoubleValue_(99.00)
 		# print('='*40,'\n姐妹字计算用时：',round(time.time() - time_start, 2),'s')
@@ -263,6 +265,7 @@ class EOD(PalettePlugin):
 	@objc.python_method
 	def start(self):
 		Glyphs.addCallback(self.update, UPDATEINTERFACE)
+		# Get ready for startup
 		self.idsDict = {}
 		self.charSetDict = {}
 		self.lastActiveGlyph = GSGlyph()
@@ -270,7 +273,12 @@ class EOD(PalettePlugin):
 		self.runtimeDict = {}
 		self.idsURLGithub = 'https://github.com/3type/EOD/raw/master/datatool/output/idsDict.pdata'
 		self.idsURLAlt = 'https://3type.io/glyphs3/plist/idsDict.pdata'
+		# Load data
 		self.readPdata()
+		# UI setup
+		siblingAmounts = Glyphs.font.userData.get('EOD_siblingAmounts', [3,3])
+		self.textFieldPartAAmount.setIntValue_(siblingAmounts[0])
+		self.textFieldPartBAmount.setIntValue_(siblingAmounts[1])
 
 		return
 
