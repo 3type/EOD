@@ -10,7 +10,8 @@
 from GlyphsApp import (Glyphs, UPDATEINTERFACE, GSGlyph, GSEditViewController)
 from GlyphsApp.plugins import PalettePlugin
 import gzip, pickle, random, itertools
-import os, time, objc, ssl
+import os, time, objc
+#, ssl
 from urllib import request
 
 class EOD(PalettePlugin):
@@ -32,8 +33,8 @@ class EOD(PalettePlugin):
 
 	checkBoxFormulaType = objc.IBOutlet()
 	checkBoxDoneUniOnly = objc.IBOutlet()
+	checkBoxFormulaDeepDown = objc.IBOutlet()
 
-	progCSibling = objc.IBOutlet()
 	progBarProgress = objc.IBOutlet()
 
 	uniListPopupButton = objc.IBOutlet()
@@ -88,7 +89,8 @@ class EOD(PalettePlugin):
 						for layer in font.glyphs[partName].layers:
 							layer.width = layerWidth
 
-						userData_partNameNote = '部件字符：%s \n生成于：【 %s 】 \n结构型：%s' % (noteList[0], self.zi(glyphUni), noteList[1])
+						userData_partNameNote = '部件字符：%s \n生成于：【 %s 】 \n结构型：%s' % (noteList[0], 
+							self.zi(glyphUni), noteList[1])
 						font.glyphs[partName].userData['EOD_partNameNote'] = userData_partNameNote
 
 			else:
@@ -129,7 +131,6 @@ class EOD(PalettePlugin):
 		Call out all the sibling glyphs to play.
 		'''
 		time_start=time.time()
-		self.progCSibling.setDoubleValue_(0.0)
 
 		font = Glyphs.font
 		if (thisGlyphs := self.thisGlyphs()):
@@ -186,7 +187,6 @@ class EOD(PalettePlugin):
 		font.userData['EOD_siblingAmounts'] = [self.textFieldPartAAmount.intValue(), 
 			self.textFieldPartBAmount.intValue()]
 
-		self.progCSibling.setDoubleValue_(99.00)
 		# print('='*40,'\n姐妹字计算用时：',round(time.time() - time_start, 2),'s')
 		
 		return
@@ -272,7 +272,7 @@ class EOD(PalettePlugin):
 		self.lastActiveTab = GSEditViewController
 		self.runtimeDict = {}
 		self.idsURLGithub = 'https://github.com/3type/EOD/raw/master/datatool/output/idsDict.pdata'
-		self.idsURLAlt = 'https://3type.io/glyphs3/plist/idsDict.pdata'
+		self.idsURLAlt = 'https://3type.cn/downloads/EOD/idsDict.pdata'
 		# Load data
 		self.readPdata()
 		# UI setup
@@ -312,7 +312,9 @@ class EOD(PalettePlugin):
 		if thisGlyph.userData['EOD_partNameNote']:
 			nameNote = thisGlyph.userData['EOD_partNameNote']
 		elif thisGlyph.unicode:
-			nameNote = self.getFormulaNote(thisGlyph.unicode)
+			nameNote = self.getFormulaNote(thisGlyph.unicode, 
+				deepDown = self.checkBoxFormulaDeepDown.intValue())
+			print(self.checkBoxFormulaDeepDown.intValue())
 		else:
 			nameNote = Glyphs.localize({
 			'en': 'Glyph without Unicode',
@@ -389,7 +391,7 @@ class EOD(PalettePlugin):
 
 
 	@objc.python_method
-	def getFormulaNote(self, xUni):
+	def getFormulaNote(self, xUni, deepDown = 0):
 		if not self.idsDict:
 			formulaNote = Glyphs.localize({
 				'en': 'Please click the 「数据源」 tab to download or choose your data file',
@@ -397,22 +399,31 @@ class EOD(PalettePlugin):
 				})
 			return formulaNote
 
-		def packList(xList):
+		def packList(xList, deep = 0):
 			outStr = ''
 			for x in xList:
+				print(x)
 				if isinstance(x,list):
-					outStr += '「%s」' % packList(x)
-				elif isinstance(x, str) and len(x) > 1:
-					outStr += '「%s」' % x
-				else:
-					outStr += x
+					outStr += '「%s」' % packList(x, deep)
+				elif isinstance(x, str):
+					if len(x) > 1:  # For 'CDP-xxxxx'
+						outStr += '「%s」' % x
+					elif deep:  # Search the Zi again
+						formulaList = self.getFormula(self.uni(x))
+						if formulaList[0] == '○':
+							outStr += x
+						else:
+							outStr += '「%s」' % packList(formulaList, deep)
+					else:
+						outStr += x
 			return outStr
 
 		formulaList = self.getFormula(xUni)
+		print(formulaList)
 		if formulaList[0] == '○':
 			formulaNote = '「 %s 」' % formulaList[1]
 		else:
-			formulaNote = packList(formulaList)
+			formulaNote = packList(formulaList, deepDown)
 		return formulaNote
 
 
@@ -636,16 +647,17 @@ class EOD(PalettePlugin):
 				url = self.idsURLGithub
 			elif option == 2:
 				url = self.idsURLAlt
-			try:
-				context = ssl._create_unverified_context()
-				with request.urlopen(url, context=context) as response:
-						idsData = response.read()
-				with open(workDir+'/dataset/idsDict.pdata', 'wb') as fout:
-					fout.write(idsData)
-					localtime = time.asctime(time.localtime(time.time()))
-					print(localtime, 'EOD idsDict downloaded')
-			except:
-				print('EOD idsDict data download failed.\nPlease Try Another Mirror.')
+			# try:
+				# context = ssl._create_unverified_context()
+				# with request.urlopen(url, context=context) as response:
+			with request.urlopen(url) as response:
+					idsData = response.read()
+			with open(workDir+'/dataset/idsDict.pdata', 'wb') as fout:
+				fout.write(idsData)
+				localtime = time.asctime(time.localtime(time.time()))
+				print(localtime, 'EOD idsDict downloaded')
+			# except:
+			print('EOD idsDict data download failed.\nPlease Try Another Mirror.')
 		try:
 			with gzip.open(workDir+'/dataset/idsDict.pdata', 'rb') as fin:
 				self.idsDict = pickle.load(fin)
