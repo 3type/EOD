@@ -13,9 +13,9 @@
 	<key>CFBundleName</key>
 	<string>EOD</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.4.3</string>
+	<string>2.4.4</string>
 	<key>CFBundleVersion</key>
-	<string>210511</string>
+	<string>210518</string>
 	<key>UpdateFeedURL</key>
 	<string>https://raw.githubusercontent.com/3type/EOD/master/Plugins/Plugin-Palette/EOD.glyphsPalette/Contents/Info.plist</string>
 	<key>productPageURL</key>
