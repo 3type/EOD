@@ -74,21 +74,24 @@ class EOD(PalettePlugin):
         for glyphUni in thisUniList:
             if glyphUni in self.idsDict.keys():
                 formula = self.getFormula(glyphUni)
-                # layerWidth = self.getHanWidth()
                 partNameDict = self.getPartNameDict(formula)
 
-                # partNameStr = ''
                 for partName, noteList in partNameDict.items():
                     sumDict[partName] = sumDict.get(partName, 0) + 1
 
-                    # _part.u8F66-LR get 8F66
+                    # Example: '_part.u8F66-LR' ---> '8F66'
                     rootName = partName.removeprefix(
                         '_part.u').split('-', 1)[0]
                     partNameStr = partNameStr + '/' + partName + ' '
 
                     if not font.glyphs[partName]:
                         font.glyphs.append(GSGlyph(partName))
-                        if font.glyphs[rootName]:
+                        sumShapes = 0
+                        if (rootGlyph := font.glyphs[rootName]):
+                            for layer in rootGlyph.layers:
+                                sumShapes += len(layer.shapes)
+
+                        if sumShapes:
                             font.glyphs[partName] = font.glyphs[rootName].copy()
                         else:
                             for master in font.masters:
