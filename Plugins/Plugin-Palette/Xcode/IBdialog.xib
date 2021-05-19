@@ -37,7 +37,7 @@
                     <tabViewItems>
                         <tabViewItem label="字符" identifier="" id="087-tZ-9Gh">
                             <view key="view" id="Oi9-Cq-zu7">
-                                <rect key="frame" x="10" y="25" width="228" height="150"/>
+                                <rect key="frame" x="10" y="29" width="228" height="146"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sm7-Cx-Zbh">
@@ -123,7 +123,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FG1-tm-2BR">
-                                        <rect key="frame" x="8" y="76" width="213" height="68"/>
+                                        <rect key="frame" x="8" y="76" width="213" height="64"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <textFieldCell key="cell" selectable="YES" borderStyle="bezel" alignment="left" title="字符信息" drawsBackground="YES" id="cXm-ck-Ii8">
                                             <font key="font" metaFont="system"/>
@@ -136,7 +136,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="check" title="深度拆解结构式" bezelStyle="regularSquare" imagePosition="right" alignment="right" controlSize="small" state="on" inset="2" id="X3y-GN-YLQ">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" size="11" name=".PingFangSC-Regular"/>
+                                            <font key="font" metaFont="smallSystem"/>
                                         </buttonCell>
                                     </button>
                                 </subviews>
@@ -235,11 +235,11 @@
                         </tabViewItem>
                         <tabViewItem label="进度" identifier="" id="Lzc-GB-6xn">
                             <view key="view" id="rQB-8E-jwl">
-                                <rect key="frame" x="10" y="25" width="228" height="161"/>
+                                <rect key="frame" x="10" y="25" width="228" height="150"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="Dnn-au-5KG">
-                                        <rect key="frame" x="1" y="28" width="227" height="130"/>
+                                        <rect key="frame" x="1" y="28" width="227" height="119"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <textFieldCell key="cell" controlSize="small" selectable="YES" title="点击进度按钮统计" id="YuG-u4-UYC">
                                             <font key="font" metaFont="smallSystem"/>
@@ -268,16 +268,17 @@
                                         </connections>
                                     </button>
                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bUF-zp-dDf">
-                                        <rect key="frame" x="59" y="0.0" width="57" height="22"/>
+                                        <rect key="frame" x="59" y="0.0" width="76" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                                        <popUpButtonCell key="cell" type="push" title="70%" bezelStyle="rounded" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="border" inset="2" selectedItem="h9N-0M-48H" id="vuS-vt-CTx">
+                                        <popUpButtonCell key="cell" type="push" title="&gt; 70%" bezelStyle="rounded" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="border" inset="2" selectedItem="h9N-0M-48H" id="vuS-vt-CTx">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="smallSystem"/>
                                             <menu key="menu" id="aT5-cD-YLt">
                                                 <items>
-                                                    <menuItem title="70%" state="on" id="h9N-0M-48H"/>
-                                                    <menuItem title="50%" id="MPw-0f-xrv"/>
-                                                    <menuItem title="30%" id="f9J-HP-Jnd" userLabel="20%"/>
+                                                    <menuItem title="&gt; 70%" state="on" id="h9N-0M-48H"/>
+                                                    <menuItem title="&gt; 50%" id="MPw-0f-xrv"/>
+                                                    <menuItem title="&gt; 30%" id="f9J-HP-Jnd" userLabel="20%"/>
+                                                    <menuItem title="&gt; 0%" id="CFG-vy-25m" userLabel="20%"/>
                                                 </items>
                                             </menu>
                                         </popUpButtonCell>
@@ -295,7 +296,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="push" title="载入/下载" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="vSG-vB-oYV">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" size="11" name=".PingFangSC-Regular"/>
+                                            <font key="font" metaFont="smallSystem"/>
                                         </buttonCell>
                                         <connections>
                                             <action selector="loadIDSButton:" target="-2" id="VRW-bv-9tK"/>
@@ -320,7 +321,7 @@
                                         <rect key="frame" x="6" y="59" width="218" height="71"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <textFieldCell key="cell" controlSize="small" alignment="left" title="如使用自制数据，请参考源码datatool中相关数据封包工具，并将idsData.pdata文件放置于插件包内dataset文件夹下" id="Ffk-Fx-age">
-                                            <font key="font" size="11" name=".PingFangSC-Regular"/>
+                                            <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>

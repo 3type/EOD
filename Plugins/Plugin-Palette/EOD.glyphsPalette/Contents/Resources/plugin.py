@@ -283,15 +283,17 @@ class EOD(PalettePlugin):
             'com.the3type.EOD.siblingAmounts', [3, 3])
         self.textFieldPartAAmount.setIntValue_(siblingAmounts[0])
         self.textFieldPartBAmount.setIntValue_(siblingAmounts[1])
+        self.progPercentPopupButton.selectItemAtIndex_(
+            Glyphs.defaults.get('com.the3type.EOD.progPercent', 0))
 
         return
 
-    @objc.python_method
+    @ objc.python_method
     def __del__(self):
         Glyphs.removeCallback(self.update)
         return
 
-    @objc.python_method
+    @ objc.python_method
     def update(self, sender):
         font = Glyphs.font
 
@@ -328,7 +330,7 @@ class EOD(PalettePlugin):
 
         return
 
-    @objc.python_method
+    @ objc.python_method
     def __file__(self):
         return __file__
 
@@ -338,7 +340,7 @@ class EOD(PalettePlugin):
 	============================================================================
 	'''
 
-    @objc.python_method
+    @ objc.python_method
     def thisGlyphs(self):
         font = Glyphs.font
         if font.currentTab:
@@ -356,15 +358,15 @@ class EOD(PalettePlugin):
 
         return thisGlyphList
 
-    @objc.python_method
+    @ objc.python_method
     def zi(self, xUni):
         return chr(int(xUni, 16))
 
-    @objc.python_method
+    @ objc.python_method
     def uni(self, zi):
         return hex(ord(zi)).swapcase()[2:]
 
-    @objc.python_method
+    @ objc.python_method
     def getHanWidth(self):
         font = Glyphs.font
         layerWidth = 1000.0
@@ -376,7 +378,7 @@ class EOD(PalettePlugin):
 
         return layerWidth
 
-    @objc.python_method
+    @ objc.python_method
     def getFormula(self, xUni):
         if (xUniValue := self.idsDict.get(xUni)):
             return xUniValue.get('formula')
@@ -384,7 +386,7 @@ class EOD(PalettePlugin):
             zi = self.zi(xUni)
             return ['○', zi, zi]
 
-    @objc.python_method
+    @ objc.python_method
     def getFormulaNote(self, xUni, deepDown=False):
         if not self.idsDict:
             formulaNote = Glyphs.localize({
@@ -420,7 +422,7 @@ class EOD(PalettePlugin):
             formulaNote = packList(formulaList, deepDown)
         return formulaNote
 
-    @objc.python_method
+    @ objc.python_method
     def getPartNameDict(self, formulaList):
         def cleanName(strOld):
             strNew = ''
@@ -480,7 +482,7 @@ class EOD(PalettePlugin):
 
         return partNameDict
 
-    @objc.python_method
+    @ objc.python_method
     def nextHeroList(self, doneUniList, allUniList, amount=3):
         def cut2ModelDict(uniList):
             modelDict = {}
@@ -534,7 +536,7 @@ class EOD(PalettePlugin):
 
         return heroList
 
-    @objc.python_method
+    @ objc.python_method
     def doneList(self, update=False, allList=False):
         def getCompStrokes(glyph):
             if glyph:
@@ -550,9 +552,11 @@ class EOD(PalettePlugin):
         progPercentDict = {
             0: 0.7,
             1: 0.5,
-            2: 0.3}
+            2: 0.3,
+            3: 0.0}
         progPercent = progPercentDict[self.progPercentPopupButton.indexOfSelectedItem(
         )]
+        Glyphs.defaults['com.the3type.EOD.progPercent'] = self.progPercentPopupButton.indexOfSelectedItem()
 
         if allList:
             dataName = 'runtime_AllList'
@@ -578,7 +582,7 @@ class EOD(PalettePlugin):
                     targetStrokes = progPercent * totalStrokes
 
                 doneStrokes = getCompStrokes(glyph)
-                if doneStrokes >= targetStrokes and glyph.unicode:
+                if doneStrokes > targetStrokes and glyph.unicode:
                     listX.append(glyph.unicode)
                     glyph.tags.addObject_('EOD_Done')
                 else:
@@ -587,7 +591,7 @@ class EOD(PalettePlugin):
 
         return listX
 
-    @objc.python_method
+    @ objc.python_method
     def isSlibing(self, xUni, yUni):
         '''
         Check if the xUni/yUni formula match.
