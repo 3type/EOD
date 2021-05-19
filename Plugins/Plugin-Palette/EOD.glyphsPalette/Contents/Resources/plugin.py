@@ -120,7 +120,7 @@ class EOD(PalettePlugin):
         Check the done glyphs by totalStrokes.
         '''
         doneList = self.doneList(update=True)
-        self.doneList(update=True, allList=True)
+        self.doneList(update=True, bypass=True)
 
         font = Glyphs.font
         for xUni in doneList:
@@ -153,24 +153,24 @@ class EOD(PalettePlugin):
         if self.checkBoxDoneUniOnly.intValue():
             searchRange = self.doneList()
         else:
-            searchRange = self.doneList(allList=True)
-        # print('='*40,'\nTime：',round(time.time() - time_start, 2),'s')
+            searchRange = self.doneList(bypass=True)
 
         if self.checkBoxFormulaType.intValue():
             formulaTypeList = []
             thisGlyphFormulaType = self.getFormula(thisGlyphUni)[0]
-            for xUni in self.idsDict.keys():
+            for xUni in searchRange:
                 if thisGlyphFormulaType == self.getFormula(xUni)[0]:
                     formulaTypeList.append(xUni)
-            searchRange = set(searchRange) & set(formulaTypeList)
-
+            searchRange = formulaTypeList
+        # print('='*40, '\nEOD searchRange Time: %fs' %
+        #       round(time.time() - time_start, 2))
         glyphZi = self.zi(thisGlyphUni)
 
         partListA = []
         partListB = []
         for xUni in searchRange:
-            matchType, matchPart, matchNote = self.isSlibing(
-                thisGlyphUni, xUni)
+            if not (matchType := self.isSlibing(thisGlyphUni, xUni)[0]):
+                continue
             if matchType in ['A', 'A-sub']:
                 partListA.append(xUni)
             elif matchType in ['B', 'B-sub', 'C']:
@@ -198,7 +198,8 @@ class EOD(PalettePlugin):
         Glyphs.defaults['com.the3type.EOD.siblingAmounts'] = [self.textFieldPartAAmount.intValue(),
                                                               self.textFieldPartBAmount.intValue()]
 
-        # print('='*40,'\n姐妹字计算用时：',round(time.time() - time_start, 2),'s')
+        # print('='*40, '\nEOD sibling Time: %fs' %
+        #       round(time.time() - time_start, 2))
 
         return
 
@@ -537,7 +538,7 @@ class EOD(PalettePlugin):
         return heroList
 
     @ objc.python_method
-    def doneList(self, update=False, allList=False):
+    def doneList(self, update=False, bypass=False):
         def getCompStrokes(glyph):
             if glyph:
                 pathStrokes = len(glyph.layers[0].paths)
@@ -549,44 +550,37 @@ class EOD(PalettePlugin):
                 return pathStrokes + compStrokes
             return 0
 
-        progPercentDict = {
-            0: 0.7,
-            1: 0.5,
-            2: 0.3,
-            3: 0.0}
-        progPercent = progPercentDict[self.progPercentPopupButton.indexOfSelectedItem(
-        )]
-        Glyphs.defaults['com.the3type.EOD.progPercent'] = self.progPercentPopupButton.indexOfSelectedItem()
-
-        if allList:
+        if bypass:
             dataName = 'runtime_AllList'
         else:
             dataName = 'runtime_DoneList'
 
+        progList = [0.7, 0.5, 0.3, 0.0]
+        progIndex = self.progPercentPopupButton.indexOfSelectedItem()
+        progPercent = progList[progIndex]
+        Glyphs.defaults['com.the3type.EOD.progPercent'] = progIndex
+
         listX = []
         if not update:
-            listX = self.runtimeDict.get(dataName, [])
-            if listX:
+            if (listX := self.runtimeDict.get(dataName, [])):
                 return listX
 
         for glyph in Glyphs.font.glyphs:
-            if allList:
-                if glyph.unicode:
-                    listX.append(glyph.unicode)
-            else:
-                totalStrokes = self.idsDict.get(
-                    glyph.unicode, {'totalStrokes': 0}).get('totalStrokes')
-                if totalStrokes <= 3:
-                    targetStrokes = 1
-                else:
-                    targetStrokes = progPercent * totalStrokes
+            if not (xUni := glyph.unicode):
+                continue
+            if bypass:
+                listX.append(xUni)
+                continue
+            if (totalStrokes := self.idsDict.get(xUni, {'totalStrokes': 1}).get('totalStrokes')) < 3:
+                totalStrokes = 1
+            targetStrokes = progPercent * totalStrokes
 
-                doneStrokes = getCompStrokes(glyph)
-                if doneStrokes > targetStrokes and glyph.unicode:
-                    listX.append(glyph.unicode)
-                    glyph.tags.addObject_('EOD_Done')
-                else:
-                    glyph.tags.removeObject_('EOD_Done')
+            doneStrokes = getCompStrokes(glyph)
+            if doneStrokes > targetStrokes:
+                listX.append(xUni)
+                glyph.tags.addObject_('EOD_Done')
+            else:
+                glyph.tags.removeObject_('EOD_Done')
         self.runtimeDict[dataName] = listX
 
         return listX
@@ -596,7 +590,7 @@ class EOD(PalettePlugin):
         '''
         Check if the xUni/yUni formula match.
         '''
-        slibingResult = [None, None, '未匹配']
+        slibingResult = [None, None, 'No Match']
         xGet, yGet = self.getFormula(xUni), self.getFormula(yUni)
 
         xA, xB = xGet[1], xGet[2]
@@ -604,26 +598,24 @@ class EOD(PalettePlugin):
 
         # A-Side match
         if xA == yA:
-            slibingResult = ['A', xA, 'A侧 完全匹配：' + str(xA)]
+            slibingResult = ['A', xA, 'A-side match: %s' % str(xA)]
         # B-Side match
         elif xB == yB:
-            slibingResult = ['B', xB, 'B侧 完全匹配：' + str(xB)]
+            slibingResult = ['B', xB, 'B-side match: %s' % str(xB)]
         # A-Side sub part match
-        elif (isinstance(xA, list)
-                and isinstance(yA, list)):
+        elif (isinstance(xA, list) and isinstance(yA, list)):
             if len(xA) == len(yA):
-                if xA[0:2] == yA[0:2] or xA[0:3:2] == yA[0:3:2]:
-                    slibingResult = ['A-sub', xA, 'A侧 子结构匹配：' + str(xA)]
+                if (xA[0:2] == yA[0:2] or xA[0:3:2] == yA[0:3:2]):
+                    slibingResult = ['A-sub', xA, 'A-side match: %s' % str(xA)]
         # B-Side sub part match
-        elif (isinstance(xB, list)
-                and isinstance(yB, list)):
+        elif (isinstance(xB, list) and isinstance(yB, list)):
             if len(xB) == len(yB):
                 if xB[0:2] == yB[0:2] or xB[0:3:2] == yB[0:3:2]:
-                    slibingResult = ['B-sub', xB, 'B侧 子结构匹配：' + str(xB)]
+                    slibingResult = ['B-sub', xB, 'B-side match: %s' % str(xB)]
         # C-Side match for 3in1
         elif len(xGet) > 3 and xGet[-1] == yGet[-1]:
             xC = xGet[-1]
-            slibingResult = ['C', xC, 'C侧 完全匹配：' + str(xC)]
+            slibingResult = ['C', xC, 'C-side match: %s' % str(xC)]
 
         return slibingResult
 
