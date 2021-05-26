@@ -220,7 +220,7 @@ class EOD(PalettePlugin):
         searchRange = self.charSetDict[uniListName]
         print('Character set size: ', len(searchRange))
         doneList = self.doneList()
-        print('Characters done: ', len(searchRange))
+        print('Characters done: ', len(doneList))
 
         heroAmount = self.heroAmountPopupButton.indexOfSelectedItem() + 1
         nextHeroList = self.nextHeroList(doneList, searchRange, heroAmount)
@@ -447,8 +447,8 @@ class EOD(PalettePlugin):
             '⿺': [['-SfBL', '⿺ 左下包围部'], ['-Si', '⿴ 被包围部']],
             '⿻': [['-XiX', '⿻ 交叠件'], ['-XiX', '⿻ 交叠件']],
             '⿲': [['-LR', '⿲ 左侧部'], ['-LR', '⿲ 中央部'], ['-LR', '⿲ 右侧部']],
-            '⿳': [['-AB', '⿳ 上侧部'], ['-AB', '⿳ 中央部'], ['-AB', '⿳ 下侧部']]
-        }
+            '⿳': [['-AB', '⿳ 上侧部'], ['-AB', '⿳ 中央部'], ['-AB', '⿳ 下侧部']]}
+
         modelSymbol = formulaList[0]
         if modelSymbol == '○':
             return {}
@@ -485,14 +485,16 @@ class EOD(PalettePlugin):
 
     @ objc.python_method
     def nextHeroList(self, doneUniList, allUniList, amount=3):
-        def cut2ModelDict(uniList):
-            modelDict = {}
-            for xUni in uniList:
-                modelKey = self.getFormula(xUni)[0]
-                if modelKey != '○':
-                    modelDict.setdefault(modelKey, []).append(xUni)
 
-            return modelDict
+
+        # def cut2ModelDict(uniList):
+        #     modelDict = {}
+        #     for xUni in uniList:
+        #         modelKey = self.getFormula(xUni)[0]
+        #         if modelKey != '○':
+        #             modelDict.setdefault(modelKey, []).append(xUni)
+
+        #     return modelDict
 
         time_start = time.time()
         self.progBarProgress.setDoubleValue_(0.0)
@@ -500,39 +502,57 @@ class EOD(PalettePlugin):
         idsSet = set(self.idsDict.keys())
         doneUniSet = set(doneUniList) & idsSet
         allUniSet = set(allUniList) & idsSet
-        searhUniSet = allUniSet - doneUniSet
+        # Nothing in the set
+        if not (searhUniSet := allUniSet - doneUniSet):
+            print('EOD Nothing in the set!')
+            pass
 
         nextUniSet = searhUniSet.copy()
-        targetDict = cut2ModelDict(doneUniSet)
 
-        for xUni in searhUniSet:
-            modelKey = self.getFormula(xUni)[0]
-            for yUni in targetDict.setdefault(modelKey, []):
-                matchType, matchPart, matchNote = self.isSlibing(xUni, yUni)
-                if matchType:
-                    nextUniSet.discard(xUni)
+        matchDict = {}
+        for xUni in nextUniSet:
+            xUniMatch = 0
+            xPartList = self.idsDict[xUni]['partList']
+            for xPart in xPartList:
+                for yUni in nextUniSet:
+                    yPartList = self.idsDict[yUni]['partList']
+                    if xPart in yPartList:
+                        xUniMatch += 1
+            matchDict[xUni] = xUniMatch
+        
+        finalList = sorted(matchDict.keys(), key=matchDict.__getitem__)
+        heroList = finalList[0:amount]
 
-        self.progBarProgress.setDoubleValue_(50.0)
-        print('='*20, '\nPart1 Time：', round(time.time() - time_start, 2), 's')
-        time_part1 = time.time()
+        # targetDict = cut2ModelDict(doneUniSet)
 
-        targetDict = cut2ModelDict(nextUniSet)
-        xDict = {}
-        for modelList in targetDict.values():
-            for xUni, yUni in itertools.product(modelList, modelList):
-                matchType, matchPart, matchNote = self.isSlibing(xUni, yUni)
-                if matchType:
-                    xDict[xUni] = xDict.get(xUni, 0) + 1
+        # for xUni in searhUniSet:
+        #     modelKey = self.getFormula(xUni)[0]
+        #     for yUni in targetDict.setdefault(modelKey, []):
+        #         matchType, matchPart, matchNote = self.isSlibing(xUni, yUni)
+        #         if matchType:
+        #             nextUniSet.discard(xUni)
 
-        allHeroLists = sorted(xDict.items(), key=lambda x: x[1], reverse=1)
-        topHeroLists = allHeroLists[:amount]
+        # self.progBarProgress.setDoubleValue_(50.0)
+        # print('='*20, '\nPart1 Time：', round(time.time() - time_start, 2), 's')
+        # time_part1 = time.time()
 
-        heroList = []
-        for xUni, xCoverage in topHeroLists:
-            heroList.append(xUni)
+        # targetDict = cut2ModelDict(nextUniSet)
+        # xDict = {}
+        # for modelList in targetDict.values():
+        #     for xUni, yUni in itertools.product(modelList, modelList):
+        #         matchType, matchPart, matchNote = self.isSlibing(xUni, yUni)
+        #         if matchType:
+        #             xDict[xUni] = xDict.get(xUni, 0) + 1
+
+        # allHeroLists = sorted(xDict.items(), key=lambda x: x[1], reverse=1)
+        # topHeroLists = allHeroLists[:amount]
+
+        # heroList = []
+        # for xUni, xCoverage in topHeroLists:
+        #     heroList.append(xUni)
 
         self.progBarProgress.setDoubleValue_(100.0)
-        print('='*20, '\nPart2 Time：', round(time.time() - time_part1, 2), 's')
+        # print('='*20, '\nPart2 Time：', round(time.time() - time_part1, 2), 's')
         print('='*40, '\nTotal Time：', round(time.time() - time_start, 2), 's')
 
         return heroList
