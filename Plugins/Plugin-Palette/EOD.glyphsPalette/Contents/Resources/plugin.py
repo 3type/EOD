@@ -124,7 +124,7 @@ class EOD(PalettePlugin):
 
         font = Glyphs.font
         for xUni in doneList:
-            font.glyphs[xUni].tags.addObject_('EOD_Done')
+            font.glyphs[xUni].tags.append('EOD_Done')
         textDone = Glyphs.localize({
             'en': 'Glyphs done: ',
             'zh': '已绘制：'})
@@ -578,9 +578,9 @@ class EOD(PalettePlugin):
             doneStrokes = getCompStrokes(glyph)
             if doneStrokes > targetStrokes:
                 listX.append(xUni)
-                glyph.tags.addObject_('EOD_Done')
+                glyph.tags.append('EOD_Done')
             else:
-                glyph.tags.removeObject_('EOD_Done')
+                glyph.tags.remove('EOD_Done')
         self.runtimeDict[dataName] = listX
 
         return listX
