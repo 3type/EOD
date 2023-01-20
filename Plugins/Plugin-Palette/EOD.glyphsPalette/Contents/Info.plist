@@ -13,9 +13,9 @@
 	<key>CFBundleName</key>
 	<string>EOD</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.4.4</string>
+	<string>2.4.5</string>
 	<key>CFBundleVersion</key>
-	<string>210904</string>
+	<string>220120</string>
 	<key>UpdateFeedURL</key>
 	<string>https://raw.githubusercontent.com/3type/EOD/master/Plugins/Plugin-Palette/EOD.glyphsPalette/Contents/Info.plist</string>
 	<key>productPageURL</key>
@@ -23,7 +23,7 @@
 	<key>productReleaseNotes</key>
 	<string>Have fun and take the bomb.</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright, 3type, 2021</string>
+	<string>Copyright, 3type, 2023</string>
 	<key>NSPrincipalClass</key>
 	<string>EOD</string>
 	<key>PyMainFileNames</key>
