@@ -580,7 +580,8 @@ class EOD(PalettePlugin):
                 listX.append(xUni)
                 glyph.tags.append('EOD_Done')
             else:
-                glyph.tags.remove('EOD_Done')
+                if 'EOD_Done' in glyph.tags:
+                    glyph.tags.remove('EOD_Done')
         self.runtimeDict[dataName] = listX
 
         return listX
