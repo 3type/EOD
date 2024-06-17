@@ -318,8 +318,14 @@ class EOD(PalettePlugin):
         if thisGlyph.userData['EOD_partNameNote']:
             nameNote = thisGlyph.userData['EOD_partNameNote']
         elif thisGlyph.unicode:
-            nameNote = '拆解结构式：\n'+self.getFormulaNote(thisGlyph.unicode,
-                                                      deepDown=self.checkBoxFormulaDeepDown.intValue())
+            text = Glyphs.localize({
+                "en": "Decomposition:",
+                "zh": "拆解结构式：",
+            })
+            nameNote = text + "\n" + self.getFormulaNote(
+                thisGlyph.unicode,
+                deepDown=self.checkBoxFormulaDeepDown.intValue()
+            )
         else:
             nameNote = Glyphs.localize({
                 'en': 'Glyph without Unicode',
