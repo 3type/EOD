@@ -2,8 +2,8 @@
 
 ################################################################################
 #
-#	Explosive Ordnance Disposal
-#	The Glyphs 3 Plugin from 3type
+#    Explosive Ordnance Disposal
+#    The Glyphs 3 Plugin from 3type
 #
 ################################################################################
 
@@ -16,8 +16,8 @@ import subprocess
 import time
 
 import objc
-from GlyphsApp import (UPDATEINTERFACE, Glyphs, GSComponent,
-                       GSEditViewController, GSGlyph, GSLayer, GSNode, GSPath)
+from GlyphsApp import UPDATEINTERFACE, Glyphs, GSComponent, \
+    GSEditViewController, GSGlyph, GSNode, GSPath
 from GlyphsApp.plugins import PalettePlugin
 
 
@@ -50,10 +50,10 @@ class EOD(PalettePlugin):
     idsDataPopupButton = objc.IBOutlet()
 
     '''
-	============================================================================
-	objc IBAction Zone
-	============================================================================
-	'''
+    ============================================================================
+    objc IBAction Zone
+    ============================================================================
+    '''
 
     @objc.IBAction
     def forgePartsButton_(self, sender):
@@ -109,7 +109,7 @@ class EOD(PalettePlugin):
             font.currentTab.text = partNameStr + self.zi(thisUniList[0])
             font.currentTab.textCursor = len(font.currentTab.layers) - 1
 
-        print('='*40, '\n部件查找计算用时：', round(time.time() - time_start, 2), 's')
+        print('=' * 40, '\n部件查找计算用时：', round(time.time() - time_start, 2), 's')
         # print(sumDict)
 
         return
@@ -128,7 +128,7 @@ class EOD(PalettePlugin):
         textDone = Glyphs.localize({
             'en': 'Glyphs done: ',
             'zh': '已绘制：'})
-        text = textDone+str(len(doneList))+' Unicode'
+        text = textDone + str(len(doneList)) + ' Unicode'
         self.textFieldProgress.setStringValue_(text)
 
         return
@@ -138,7 +138,7 @@ class EOD(PalettePlugin):
         '''
         Call out all the sibling glyphs to play.
         '''
-        time_start = time.time()
+        # time_start = time.time()
 
         font = Glyphs.font
         if (thisGlyphs := self.thisGlyphs()):
@@ -214,7 +214,8 @@ class EOD(PalettePlugin):
         uniListDict = {
             0: 'GB2312',
             1: 'Hanyi9169',
-            2: 'Big5'	}
+            2: 'Big5'
+        }
         uniListName = uniListDict[self.uniListPopupButton.indexOfSelectedItem()]
 
         searchRange = self.charSetDict[uniListName]
@@ -250,10 +251,10 @@ class EOD(PalettePlugin):
         return
 
     '''
-	============================================================================
-	Glyphs-Plugin Zone
-	============================================================================
-	'''
+    ============================================================================
+    Glyphs-Plugin Zone
+    ============================================================================
+    '''
 
     @objc.python_method
     def settings(self):
@@ -289,12 +290,12 @@ class EOD(PalettePlugin):
 
         return
 
-    @ objc.python_method
+    @objc.python_method
     def __del__(self):
         Glyphs.removeCallback(self.update)
         return
 
-    @ objc.python_method
+    @objc.python_method
     def update(self, sender):
         font = Glyphs.font
 
@@ -331,17 +332,17 @@ class EOD(PalettePlugin):
 
         return
 
-    @ objc.python_method
+    @objc.python_method
     def __file__(self):
         return __file__
 
     '''
-	============================================================================
-	EOD self.function Zone
-	============================================================================
-	'''
+    ============================================================================
+    EOD self.function Zone
+    ============================================================================
+    '''
 
-    @ objc.python_method
+    @objc.python_method
     def thisGlyphs(self):
         font = Glyphs.font
         if font.currentTab:
@@ -359,15 +360,15 @@ class EOD(PalettePlugin):
 
         return thisGlyphList
 
-    @ objc.python_method
+    @objc.python_method
     def zi(self, xUni):
         return chr(int(xUni, 16))
 
-    @ objc.python_method
+    @objc.python_method
     def uni(self, zi):
         return hex(ord(zi)).swapcase()[2:]
 
-    @ objc.python_method
+    @objc.python_method
     def getHanWidth(self):
         font = Glyphs.font
         layerWidth = 1000.0
@@ -379,7 +380,7 @@ class EOD(PalettePlugin):
 
         return layerWidth
 
-    @ objc.python_method
+    @objc.python_method
     def getFormula(self, xUni):
         if (xUniValue := self.idsDict.get(xUni)):
             return xUniValue.get('formula')
@@ -387,7 +388,7 @@ class EOD(PalettePlugin):
             zi = self.zi(xUni)
             return ['○', zi, zi]
 
-    @ objc.python_method
+    @objc.python_method
     def getFormulaNote(self, xUni, deepDown=False):
         if not self.idsDict:
             formulaNote = Glyphs.localize({
@@ -423,7 +424,7 @@ class EOD(PalettePlugin):
             formulaNote = packList(formulaList, deepDown)
         return formulaNote
 
-    @ objc.python_method
+    @objc.python_method
     def getPartNameDict(self, formulaList):
         def cleanName(strOld):
             strNew = ''
@@ -483,7 +484,7 @@ class EOD(PalettePlugin):
 
         return partNameDict
 
-    @ objc.python_method
+    @objc.python_method
     def nextHeroList(self, doneUniList, allUniList, amount=3):
         def cut2ModelDict(uniList):
             modelDict = {}
@@ -513,7 +514,7 @@ class EOD(PalettePlugin):
                     nextUniSet.discard(xUni)
 
         self.progBarProgress.setDoubleValue_(50.0)
-        print('='*20, '\nPart1 Time：', round(time.time() - time_start, 2), 's')
+        print('=' * 20, '\nPart1 Time：', round(time.time() - time_start, 2), 's')
         time_part1 = time.time()
 
         targetDict = cut2ModelDict(nextUniSet)
@@ -532,12 +533,12 @@ class EOD(PalettePlugin):
             heroList.append(xUni)
 
         self.progBarProgress.setDoubleValue_(100.0)
-        print('='*20, '\nPart2 Time：', round(time.time() - time_part1, 2), 's')
-        print('='*40, '\nTotal Time：', round(time.time() - time_start, 2), 's')
+        print('=' * 20, '\nPart2 Time：', round(time.time() - time_part1, 2), 's')
+        print('=' * 40, '\nTotal Time：', round(time.time() - time_start, 2), 's')
 
         return heroList
 
-    @ objc.python_method
+    @objc.python_method
     def doneList(self, update=False, bypass=False):
         def getCompStrokes(glyph):
             if glyph:
@@ -586,7 +587,7 @@ class EOD(PalettePlugin):
 
         return listX
 
-    @ objc.python_method
+    @objc.python_method
     def isSlibing(self, xUni, yUni):
         '''
         Check if the xUni/yUni formula match.
@@ -626,11 +627,11 @@ class EOD(PalettePlugin):
         Load or download the pdata file.
         '''
         workDir = os.path.dirname(__file__)
-        with gzip.open(workDir+'/dataset/charSetDict.pdata', 'rb') as fin:
+        with gzip.open(workDir + '/dataset/charSetDict.pdata', 'rb') as fin:
             self.charSetDict = pickle.load(fin)
             print('EOD charSetDict Ready')
 
-        idsDataPath = workDir+'/dataset/idsDict.pdata'
+        idsDataPath = workDir + '/dataset/idsDict.pdata'
         if option:
             if option == 1:
                 url = self.idsURLGithub
@@ -649,7 +650,7 @@ class EOD(PalettePlugin):
                 print('EOD ERROR: curl failed!')
 
         try:
-            with gzip.open(workDir+'/dataset/idsDict.pdata', 'rb') as fin:
+            with gzip.open(workDir + '/dataset/idsDict.pdata', 'rb') as fin:
                 self.idsDict = pickle.load(fin)
             print('EOD idsDict{} Readed')
         except:
@@ -663,7 +664,7 @@ class EOD(PalettePlugin):
         font = Glyphs.font
         if not font.glyphs[aBomb]:
             workDir = os.path.dirname(__file__)
-            with gzip.open(workDir+'/dataset/aBombList.pdata', 'rb') as fin:
+            with gzip.open(workDir + '/dataset/aBombList.pdata', 'rb') as fin:
                 aBombNodeList = pickle.load(fin)
 
             shapeList = []
