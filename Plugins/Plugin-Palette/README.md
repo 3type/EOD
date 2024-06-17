@@ -29,7 +29,7 @@ Example:
     䧹 in (應 譍 噟 鷹)  <--- Siblings
     鳥 in (鷹 鴵 蔦 鵎)  <--- Also Siblings, and '鷹' in both groups.
 
-EOD give you an buttom to randomly call out the siblings for quick edit or compare the glyphs.
+EOD give you an button to randomly call out the siblings for quick edit or compare the glyphs.
 
 Demo:
 
