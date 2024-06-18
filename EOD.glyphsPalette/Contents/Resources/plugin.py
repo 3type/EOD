@@ -256,22 +256,24 @@ class EOD(PalettePlugin):
 
     @objc.python_method
     def start(self):
-        Glyphs.addCallback(self.update, UPDATEINTERFACE)
         # Get ready for startup
         self.idsDict = {}
         self.charSetDict = {}
-        self.lastActiveGlyph = GSGlyph()
-        self.lastActiveTab = GSEditViewController
+        self.lastActiveGlyph = None
+        self.lastActiveTab = None
         self.runtimeDict = {}
         # Load data
         self.readPdata()
         # UI setup
         siblingAmounts = Glyphs.defaults.get(
-            'com.the3type.EOD.siblingAmounts', [3, 3])
+            'com.the3type.EOD.siblingAmounts', [3, 3]
+        )
         self.textFieldPartAAmount.setIntValue_(siblingAmounts[0])
         self.textFieldPartBAmount.setIntValue_(siblingAmounts[1])
         self.progPercentPopupButton.selectItemAtIndex_(
-            Glyphs.defaults.get('com.the3type.EOD.progPercent', 0))
+            Glyphs.defaults.get('com.the3type.EOD.progPercent', 0)
+        )
+        Glyphs.addCallback(self.update, UPDATEINTERFACE)
 
     @objc.python_method
     def __del__(self):
@@ -280,14 +282,16 @@ class EOD(PalettePlugin):
     @objc.python_method
     def update(self, sender):
         font = Glyphs.font
-
-        if not self.thisGlyphs():
+        thisGlyphs = self.thisGlyphs()
+        if not thisGlyphs:
             return
 
-        thisGlyph = self.thisGlyphs()[0]
-        if thisGlyph != self.lastActiveGlyph or font.currentTab != self.lastActiveTab:
-            self.lastActiveGlyph = thisGlyph
-            self.lastActiveTab = font.currentTab
+        thisGlyph = thisGlyphs[0]
+        if thisGlyph == self.lastActiveGlyph and font.currentTab == self.lastActiveTab:
+            return
+
+        self.lastActiveGlyph = thisGlyph
+        self.lastActiveTab = font.currentTab
 
         thisGlyphUni = thisGlyph.unicode
         if thisGlyphUni in self.idsDict.keys():
@@ -656,9 +660,10 @@ class EOD(PalettePlugin):
     def getBombComponent(self):
         aBomb = '_EOD.aBomb'
         font = Glyphs.font
-        if not font.glyphs[aBomb]:
+        aBombGlyph = font.glyphs[aBomb]
+        if not aBombGlyph:
             workDir = os.path.dirname(__file__)
-            with gzip.open(workDir + '/dataset/aBombList.pdata', 'rb') as fin:
+            with gzip.open(os.path.join(self.defaultDataFolder(), 'aBombList.pdata'), 'rb') as fin:
                 aBombNodeList = pickle.load(fin)
 
             shapeList = []
@@ -671,11 +676,11 @@ class EOD(PalettePlugin):
                     newPath.nodes.append(newNode)
                 newPath.closed = True
                 shapeList.append(newPath)
-
-            font.glyphs.append(GSGlyph(aBomb))
-            aBombGlyph = font.glyphs[aBomb]
+            aBombGlyph = GSGlyph(aBomb)
+            font.glyphs.append(aBombGlyph)
             for layer in aBombGlyph.layers:
                 layer.width = self.getHanWidth()
                 layer.shapes = shapeList
 
-        return GSComponent(font.glyphs[aBomb], (0, 0))
+        return GSComponent(aBombGlyph)
+
