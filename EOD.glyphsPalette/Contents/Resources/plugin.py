@@ -12,12 +12,11 @@ import itertools
 import os
 import pickle
 import random
-import subprocess
 import time
 
 import objc
 from GlyphsApp import UPDATEINTERFACE, Glyphs, GSComponent, \
-    GSEditViewController, GSGlyph, GSNode, GSPath
+    GSEditViewController, GSGlyph, GSNode, GSPath, GSGlyphsInfo
 from GlyphsApp.plugins import PalettePlugin
 
 
@@ -264,8 +263,6 @@ class EOD(PalettePlugin):
         self.lastActiveGlyph = GSGlyph()
         self.lastActiveTab = GSEditViewController
         self.runtimeDict = {}
-        self.idsURLGithub = 'https://raw.githubusercontent.com/3type/EOD/master/datatool/output/idsDict.pdata'
-        self.idsURLAlt = 'https://3type.cn/downloads/EOD/idsDict.pdata'
         # Load data
         self.readPdata()
         # UI setup
@@ -611,39 +608,49 @@ class EOD(PalettePlugin):
         return slibingResult
 
     @objc.python_method
-    def readPdata(self, option=0):
+    def defaultDataFolder(self):
+        workDir = os.path.dirname(__file__)
+        workDir = os.path.join(workDir, "dataset")
+        print("__workDir", workDir)
+        return workDir
+
+    @objc.python_method
+    def userDataFolder(self):
+        workDir = GSGlyphsInfo.applicationSupportPath()
+        workDir = os.path.join(workDir, "Info/EDO")
+        print("__workDir", workDir)
+        return workDir
+
+
+    @objc.python_method
+    def readPdata(self):
         '''
         Load or download the pdata file.
         '''
-        workDir = os.path.dirname(__file__)
-        with gzip.open(workDir + '/dataset/charSetDict.pdata', 'rb') as fin:
+        print("__readPdata a")
+
+        useLocal = self.idsDataPopupButton.state()
+
+        defaultDataFolder = self.defaultDataFolder()
+        with gzip.open(os.path.join(defaultDataFolder, 'charSetDict.pdata'), 'rb') as fin:
             self.charSetDict = pickle.load(fin)
             print('EOD charSetDict Ready')
 
-        idsDataPath = workDir + '/dataset/idsDict.pdata'
-        if option:
-            if option == 1:
-                url = self.idsURLGithub
-            elif option == 2:
-                url = self.idsURLAlt
-            else:
-                return
-
-            print('EOD idsData Target URL:%s' % url)
-            try:
-                # Call curl to download https url
-                subprocess.call(['curl', '--output', idsDataPath, url])
-                localtime = time.asctime(time.localtime(time.time()))
-                print('EOD idsDict downloaded @ ', localtime)
-            except:
-                print('EOD ERROR: curl failed!')
+        idsDataPath = None
+        if useLocal:
+            idsDataPath = os.path.join(self.userDataFolder(), 'idsDict.pdata')
+            if not os.path.exists(idsDataPath):
+                idsDataPath = None
+        if idsDataPath is None:
+            idsDataPath = os.path.join(defaultDataFolder, 'idsDict.pdata')
 
         try:
-            with gzip.open(workDir + '/dataset/idsDict.pdata', 'rb') as fin:
+            with gzip.open(idsDataPath, 'rb') as fin:
                 self.idsDict = pickle.load(fin)
-            print('EOD idsDict{} Readed')
+                print('EOD idsDict Ready')
         except:
             print('EOD idsDict data missing or broken.\nPlease Try Again.')
+        print("__readPdata b")
 
     @objc.python_method
     def getBombComponent(self):
