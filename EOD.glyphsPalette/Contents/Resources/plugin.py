@@ -112,8 +112,6 @@ class EOD(PalettePlugin):
         print('=' * 40, '\n部件查找计算用时：', round(time.time() - time_start, 2), 's')
         # print(sumDict)
 
-        return
-
     @objc.IBAction
     def checkProgressButton_(self, sender):
         '''
@@ -130,8 +128,6 @@ class EOD(PalettePlugin):
             'zh': '已绘制：'})
         text = textDone + str(len(doneList)) + ' Unicode'
         self.textFieldProgress.setStringValue_(text)
-
-        return
 
     @objc.IBAction
     def siblingButton_(self, sender):
@@ -201,8 +197,6 @@ class EOD(PalettePlugin):
         # print('='*40, '\nEOD sibling Time: %fs' %
         #       round(time.time() - time_start, 2))
 
-        return
-
     @objc.IBAction
     def nextHeroButton_(self, sender):
         '''
@@ -239,16 +233,12 @@ class EOD(PalettePlugin):
         font.currentTab.textCursor = 0
         font.currentTab.textRange = 1
 
-        return
-
     @objc.IBAction
     def loadIDSButton_(self, sender):
         '''
         Choose your IDS data.
         '''
         self.readPdata(self.idsDataPopupButton.indexOfSelectedItem())
-
-        return
 
     '''
     ============================================================================
@@ -264,8 +254,6 @@ class EOD(PalettePlugin):
         })
 
         self.loadNib('IBdialog', __file__)
-
-        return
 
     @objc.python_method
     def start(self):
@@ -288,12 +276,9 @@ class EOD(PalettePlugin):
         self.progPercentPopupButton.selectItemAtIndex_(
             Glyphs.defaults.get('com.the3type.EOD.progPercent', 0))
 
-        return
-
     @objc.python_method
     def __del__(self):
         Glyphs.removeCallback(self.update)
-        return
 
     @objc.python_method
     def update(self, sender):
@@ -335,8 +320,6 @@ class EOD(PalettePlugin):
         self.textFieldTargetZi.setStringValue_(targetZi)
         self.textFieldTargetZiFormulaType.setStringValue_(targetZiFormulaType)
         self.textFieldPartNameNote.setStringValue_(nameNote)
-
-        return
 
     @objc.python_method
     def __file__(self):
@@ -661,8 +644,6 @@ class EOD(PalettePlugin):
             print('EOD idsDict{} Readed')
         except:
             print('EOD idsDict data missing or broken.\nPlease Try Again.')
-
-        return
 
     @objc.python_method
     def getBombComponent(self):
