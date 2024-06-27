@@ -24,7 +24,7 @@
 "FZD-vV-Wkw.title" = "Download CHISE ids data package (3type image)";
 
 /* Class = "NSTextFieldCell"; title = "如使用自制数据，请参考源码datatool中相关数据封包工具，并将idsData.pdata文件放置于插件包内dataset文件夹下"; ObjectID = "Ffk-Fx-age"; */
-"Ffk-Fx-age.title" = "If you use your own data, please refer to the relevant data packaging tools in the source code datatool, and place the idsData.pdata file in the dataset folder in the plugin package.";
+"Ffk-Fx-age.title" = "If you use your own data, please refer to the relevant data packaging tools in the source code datatool, and store it in ~/Library/Application Support/Glyphs 3/Info/EDO/idsData.pdata";
 
 /* Class = "NSTextFieldCell"; placeholderString = "字"; ObjectID = "Kfg-At-WxX"; */
 "Kfg-At-WxX.placeholderString" = "Character";
