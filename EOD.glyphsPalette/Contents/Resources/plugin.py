@@ -16,7 +16,7 @@ import time
 
 import objc
 from GlyphsApp import UPDATEINTERFACE, Glyphs, GSComponent, \
-    GSEditViewController, GSGlyph, GSNode, GSPath, GSGlyphsInfo
+    GSGlyph, GSNode, GSPath, GSGlyphsInfo
 from GlyphsApp.plugins import PalettePlugin
 
 
@@ -615,23 +615,22 @@ class EOD(PalettePlugin):
     def defaultDataFolder(self):
         workDir = os.path.dirname(__file__)
         workDir = os.path.join(workDir, "dataset")
-        print("__workDir", workDir)
+        # print("__workDir", workDir)
         return workDir
 
     @objc.python_method
     def userDataFolder(self):
         workDir = GSGlyphsInfo.applicationSupportPath()
         workDir = os.path.join(workDir, "Info/EDO")
-        print("__workDir", workDir)
+        # print("__workDir", workDir)
         return workDir
-
 
     @objc.python_method
     def readPdata(self):
         '''
         Load or download the pdata file.
         '''
-        print("__readPdata a")
+        # print("__readPdata a")
 
         useLocal = self.idsDataPopupButton.state()
 
@@ -654,7 +653,7 @@ class EOD(PalettePlugin):
                 print('EOD idsDict Ready')
         except:
             print('EOD idsDict data missing or broken.\nPlease Try Again.')
-        print("__readPdata b")
+        # print("__readPdata b")
 
     @objc.python_method
     def getBombComponent(self):
@@ -662,7 +661,7 @@ class EOD(PalettePlugin):
         font = Glyphs.font
         aBombGlyph = font.glyphs[aBomb]
         if not aBombGlyph:
-            workDir = os.path.dirname(__file__)
+            # workDir = os.path.dirname(__file__)
             with gzip.open(os.path.join(self.defaultDataFolder(), 'aBombList.pdata'), 'rb') as fin:
                 aBombNodeList = pickle.load(fin)
 
@@ -683,4 +682,3 @@ class EOD(PalettePlugin):
                 layer.shapes = shapeList
 
         return GSComponent(aBombGlyph)
-

@@ -63,10 +63,11 @@ for lineList in unihanTSVData:
 # 	idsDict[xUni] = {'zi': xZi, 'formula': formulaList, 'totalStrokes': totalStrokes}
 idsDict = {}
 
+
 def checkIt(listXY):
 	if len(listXY) == 1:
 		return 1
-	
+
 	if str(listXY[0]) in '⿲⿳':
 		for x in listXY[1:4]:
 			if str(x) in '⿰⿱⿴⿵⿶⿷⿸⿹⿺⿻⿲⿳':
@@ -81,7 +82,8 @@ def checkIt(listXY):
 
 	return 0
 
-''' 
+
+'''
 Cut fromula String into List
 
 Input: '⿳⿰巳巳一&GT-K00059;'
