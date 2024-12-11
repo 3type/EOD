@@ -3,7 +3,7 @@ import pickle
 import gzip
 
 from json_file import load_json
-from json_file import dump_json
+# from json_file import dump_json
 
 uniList_GB2312 = load_json('GB2312.json')
 uniList_GB2312.sort()
@@ -16,8 +16,8 @@ uniList_Hanyi9169.sort()
 
 charSetDict = {
     'GB2312': uniList_GB2312,
-	'Big5': uniList_Big5,
-	'Hanyi9169': uniList_Hanyi9169
+    'Big5': uniList_Big5,
+    'Hanyi9169': uniList_Hanyi9169
 }
 
 # with open('./output/charSetDict.pickle', 'wb') as outfile:
