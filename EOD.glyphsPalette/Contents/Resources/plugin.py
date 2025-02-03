@@ -2,8 +2,8 @@
 
 ################################################################################
 #
-#	Explosive Ordnance Disposal
-#	The Glyphs 3 Plugin from 3type
+#    Explosive Ordnance Disposal
+#    The Glyphs 3 Plugin from 3type
 #
 ################################################################################
 
@@ -12,12 +12,11 @@ import itertools
 import os
 import pickle
 import random
-import subprocess
 import time
 
 import objc
-from GlyphsApp import (UPDATEINTERFACE, Glyphs, GSComponent,
-                       GSEditViewController, GSGlyph, GSLayer, GSNode, GSPath)
+from GlyphsApp import UPDATEINTERFACE, Glyphs, GSComponent, \
+    GSGlyph, GSNode, GSPath, GSGlyphsInfo
 from GlyphsApp.plugins import PalettePlugin
 
 
@@ -50,10 +49,10 @@ class EOD(PalettePlugin):
     idsDataPopupButton = objc.IBOutlet()
 
     '''
-	============================================================================
-	objc IBAction Zone
-	============================================================================
-	'''
+    ============================================================================
+    objc IBAction Zone
+    ============================================================================
+    '''
 
     @objc.IBAction
     def forgePartsButton_(self, sender):
@@ -109,10 +108,8 @@ class EOD(PalettePlugin):
             font.currentTab.text = partNameStr + self.zi(thisUniList[0])
             font.currentTab.textCursor = len(font.currentTab.layers) - 1
 
-        print('='*40, '\n部件查找计算用时：', round(time.time() - time_start, 2), 's')
+        print('=' * 40, '\n部件查找计算用时：', round(time.time() - time_start, 2), 's')
         # print(sumDict)
-
-        return
 
     @objc.IBAction
     def checkProgressButton_(self, sender):
@@ -128,17 +125,15 @@ class EOD(PalettePlugin):
         textDone = Glyphs.localize({
             'en': 'Glyphs done: ',
             'zh': '已绘制：'})
-        text = textDone+str(len(doneList))+' Unicode'
+        text = textDone + str(len(doneList)) + ' Unicode'
         self.textFieldProgress.setStringValue_(text)
-
-        return
 
     @objc.IBAction
     def siblingButton_(self, sender):
         '''
         Call out all the sibling glyphs to play.
         '''
-        time_start = time.time()
+        # time_start = time.time()
 
         font = Glyphs.font
         if (thisGlyphs := self.thisGlyphs()):
@@ -201,8 +196,6 @@ class EOD(PalettePlugin):
         # print('='*40, '\nEOD sibling Time: %fs' %
         #       round(time.time() - time_start, 2))
 
-        return
-
     @objc.IBAction
     def nextHeroButton_(self, sender):
         '''
@@ -214,7 +207,8 @@ class EOD(PalettePlugin):
         uniListDict = {
             0: 'GB2312',
             1: 'Hanyi9169',
-            2: 'Big5'	}
+            2: 'Big5'
+        }
         uniListName = uniListDict[self.uniListPopupButton.indexOfSelectedItem()]
 
         searchRange = self.charSetDict[uniListName]
@@ -238,8 +232,6 @@ class EOD(PalettePlugin):
         font.currentTab.textCursor = 0
         font.currentTab.textRange = 1
 
-        return
-
     @objc.IBAction
     def loadIDSButton_(self, sender):
         '''
@@ -247,13 +239,11 @@ class EOD(PalettePlugin):
         '''
         self.readPdata(self.idsDataPopupButton.indexOfSelectedItem())
 
-        return
-
     '''
-	============================================================================
-	Glyphs-Plugin Zone
-	============================================================================
-	'''
+    ============================================================================
+    Glyphs-Plugin Zone
+    ============================================================================
+    '''
 
     @objc.python_method
     def settings(self):
@@ -264,47 +254,44 @@ class EOD(PalettePlugin):
 
         self.loadNib('IBdialog', __file__)
 
-        return
-
     @objc.python_method
     def start(self):
-        Glyphs.addCallback(self.update, UPDATEINTERFACE)
         # Get ready for startup
         self.idsDict = {}
         self.charSetDict = {}
-        self.lastActiveGlyph = GSGlyph()
-        self.lastActiveTab = GSEditViewController
+        self.lastActiveGlyph = None
+        self.lastActiveTab = None
         self.runtimeDict = {}
-        self.idsURLGithub = 'https://raw.githubusercontent.com/3type/EOD/master/datatool/output/idsDict.pdata'
-        self.idsURLAlt = 'https://3type.cn/downloads/EOD/idsDict.pdata'
         # Load data
         self.readPdata()
         # UI setup
         siblingAmounts = Glyphs.defaults.get(
-            'com.the3type.EOD.siblingAmounts', [3, 3])
+            'com.the3type.EOD.siblingAmounts', [3, 3]
+        )
         self.textFieldPartAAmount.setIntValue_(siblingAmounts[0])
         self.textFieldPartBAmount.setIntValue_(siblingAmounts[1])
         self.progPercentPopupButton.selectItemAtIndex_(
-            Glyphs.defaults.get('com.the3type.EOD.progPercent', 0))
+            Glyphs.defaults.get('com.the3type.EOD.progPercent', 0)
+        )
+        Glyphs.addCallback(self.update, UPDATEINTERFACE)
 
-        return
-
-    @ objc.python_method
+    @objc.python_method
     def __del__(self):
         Glyphs.removeCallback(self.update)
-        return
 
-    @ objc.python_method
+    @objc.python_method
     def update(self, sender):
         font = Glyphs.font
-
-        if not self.thisGlyphs():
+        thisGlyphs = self.thisGlyphs()
+        if not thisGlyphs:
             return
 
-        thisGlyph = self.thisGlyphs()[0]
-        if thisGlyph != self.lastActiveGlyph or font.currentTab != self.lastActiveTab:
-            self.lastActiveGlyph = thisGlyph
-            self.lastActiveTab = font.currentTab
+        thisGlyph = thisGlyphs[0]
+        if thisGlyph == self.lastActiveGlyph and font.currentTab == self.lastActiveTab:
+            return
+
+        self.lastActiveGlyph = thisGlyph
+        self.lastActiveTab = font.currentTab
 
         thisGlyphUni = thisGlyph.unicode
         if thisGlyphUni in self.idsDict.keys():
@@ -317,8 +304,14 @@ class EOD(PalettePlugin):
         if thisGlyph.userData['EOD_partNameNote']:
             nameNote = thisGlyph.userData['EOD_partNameNote']
         elif thisGlyph.unicode:
-            nameNote = '拆解结构式：\n'+self.getFormulaNote(thisGlyph.unicode,
-                                                      deepDown=self.checkBoxFormulaDeepDown.intValue())
+            text = Glyphs.localize({
+                "en": "Decomposition:",
+                "zh": "拆解结构式：",
+            })
+            nameNote = text + "\n" + self.getFormulaNote(
+                thisGlyph.unicode,
+                deepDown=self.checkBoxFormulaDeepDown.intValue()
+            )
         else:
             nameNote = Glyphs.localize({
                 'en': 'Glyph without Unicode',
@@ -329,19 +322,17 @@ class EOD(PalettePlugin):
         self.textFieldTargetZiFormulaType.setStringValue_(targetZiFormulaType)
         self.textFieldPartNameNote.setStringValue_(nameNote)
 
-        return
-
-    @ objc.python_method
+    @objc.python_method
     def __file__(self):
         return __file__
 
     '''
-	============================================================================
-	EOD self.function Zone
-	============================================================================
-	'''
+    ============================================================================
+    EOD self.function Zone
+    ============================================================================
+    '''
 
-    @ objc.python_method
+    @objc.python_method
     def thisGlyphs(self):
         font = Glyphs.font
         if font.currentTab:
@@ -359,15 +350,15 @@ class EOD(PalettePlugin):
 
         return thisGlyphList
 
-    @ objc.python_method
+    @objc.python_method
     def zi(self, xUni):
         return chr(int(xUni, 16))
 
-    @ objc.python_method
+    @objc.python_method
     def uni(self, zi):
         return hex(ord(zi)).swapcase()[2:]
 
-    @ objc.python_method
+    @objc.python_method
     def getHanWidth(self):
         font = Glyphs.font
         layerWidth = 1000.0
@@ -379,7 +370,7 @@ class EOD(PalettePlugin):
 
         return layerWidth
 
-    @ objc.python_method
+    @objc.python_method
     def getFormula(self, xUni):
         if (xUniValue := self.idsDict.get(xUni)):
             return xUniValue.get('formula')
@@ -387,7 +378,7 @@ class EOD(PalettePlugin):
             zi = self.zi(xUni)
             return ['○', zi, zi]
 
-    @ objc.python_method
+    @objc.python_method
     def getFormulaNote(self, xUni, deepDown=False):
         if not self.idsDict:
             formulaNote = Glyphs.localize({
@@ -423,7 +414,7 @@ class EOD(PalettePlugin):
             formulaNote = packList(formulaList, deepDown)
         return formulaNote
 
-    @ objc.python_method
+    @objc.python_method
     def getPartNameDict(self, formulaList):
         def cleanName(strOld):
             strNew = ''
@@ -483,7 +474,7 @@ class EOD(PalettePlugin):
 
         return partNameDict
 
-    @ objc.python_method
+    @objc.python_method
     def nextHeroList(self, doneUniList, allUniList, amount=3):
         def cut2ModelDict(uniList):
             modelDict = {}
@@ -513,7 +504,7 @@ class EOD(PalettePlugin):
                     nextUniSet.discard(xUni)
 
         self.progBarProgress.setDoubleValue_(50.0)
-        print('='*20, '\nPart1 Time：', round(time.time() - time_start, 2), 's')
+        print('=' * 20, '\nPart1 Time：', round(time.time() - time_start, 2), 's')
         time_part1 = time.time()
 
         targetDict = cut2ModelDict(nextUniSet)
@@ -532,12 +523,12 @@ class EOD(PalettePlugin):
             heroList.append(xUni)
 
         self.progBarProgress.setDoubleValue_(100.0)
-        print('='*20, '\nPart2 Time：', round(time.time() - time_part1, 2), 's')
-        print('='*40, '\nTotal Time：', round(time.time() - time_start, 2), 's')
+        print('=' * 20, '\nPart2 Time：', round(time.time() - time_part1, 2), 's')
+        print('=' * 40, '\nTotal Time：', round(time.time() - time_start, 2), 's')
 
         return heroList
 
-    @ objc.python_method
+    @objc.python_method
     def doneList(self, update=False, bypass=False):
         def getCompStrokes(glyph):
             if glyph:
@@ -586,7 +577,7 @@ class EOD(PalettePlugin):
 
         return listX
 
-    @ objc.python_method
+    @objc.python_method
     def isSlibing(self, xUni, yUni):
         '''
         Check if the xUni/yUni formula match.
@@ -621,49 +612,57 @@ class EOD(PalettePlugin):
         return slibingResult
 
     @objc.python_method
-    def readPdata(self, option=0):
+    def defaultDataFolder(self):
+        workDir = os.path.dirname(__file__)
+        workDir = os.path.join(workDir, "dataset")
+        # print("__workDir", workDir)
+        return workDir
+
+    @objc.python_method
+    def userDataFolder(self):
+        workDir = GSGlyphsInfo.applicationSupportPath()
+        workDir = os.path.join(workDir, "Info/EDO")
+        # print("__workDir", workDir)
+        return workDir
+
+    @objc.python_method
+    def readPdata(self):
         '''
         Load or download the pdata file.
         '''
-        workDir = os.path.dirname(__file__)
-        with gzip.open(workDir+'/dataset/charSetDict.pdata', 'rb') as fin:
+        # print("__readPdata a")
+
+        useLocal = self.idsDataPopupButton.state()
+
+        defaultDataFolder = self.defaultDataFolder()
+        with gzip.open(os.path.join(defaultDataFolder, 'charSetDict.pdata'), 'rb') as fin:
             self.charSetDict = pickle.load(fin)
             print('EOD charSetDict Ready')
 
-        idsDataPath = workDir+'/dataset/idsDict.pdata'
-        if option:
-            if option == 1:
-                url = self.idsURLGithub
-            elif option == 2:
-                url = self.idsURLAlt
-            else:
-                return
-
-            print('EOD idsData Target URL:%s' % url)
-            try:
-                # Call curl to download https url
-                subprocess.call(['curl', '--output', idsDataPath, url])
-                localtime = time.asctime(time.localtime(time.time()))
-                print('EOD idsDict downloaded @ ', localtime)
-            except:
-                print('EOD ERROR: curl failed!')
+        idsDataPath = None
+        if useLocal:
+            idsDataPath = os.path.join(self.userDataFolder(), 'idsDict.pdata')
+            if not os.path.exists(idsDataPath):
+                idsDataPath = None
+        if idsDataPath is None:
+            idsDataPath = os.path.join(defaultDataFolder, 'idsDict.pdata')
 
         try:
-            with gzip.open(workDir+'/dataset/idsDict.pdata', 'rb') as fin:
+            with gzip.open(idsDataPath, 'rb') as fin:
                 self.idsDict = pickle.load(fin)
-            print('EOD idsDict{} Readed')
+                print('EOD idsDict Ready')
         except:
             print('EOD idsDict data missing or broken.\nPlease Try Again.')
-
-        return
+        # print("__readPdata b")
 
     @objc.python_method
     def getBombComponent(self):
         aBomb = '_EOD.aBomb'
         font = Glyphs.font
-        if not font.glyphs[aBomb]:
-            workDir = os.path.dirname(__file__)
-            with gzip.open(workDir+'/dataset/aBombList.pdata', 'rb') as fin:
+        aBombGlyph = font.glyphs[aBomb]
+        if not aBombGlyph:
+            # workDir = os.path.dirname(__file__)
+            with gzip.open(os.path.join(self.defaultDataFolder(), 'aBombList.pdata'), 'rb') as fin:
                 aBombNodeList = pickle.load(fin)
 
             shapeList = []
@@ -676,11 +675,10 @@ class EOD(PalettePlugin):
                     newPath.nodes.append(newNode)
                 newPath.closed = True
                 shapeList.append(newPath)
-
-            font.glyphs.append(GSGlyph(aBomb))
-            aBombGlyph = font.glyphs[aBomb]
+            aBombGlyph = GSGlyph(aBomb)
+            font.glyphs.append(aBombGlyph)
             for layer in aBombGlyph.layers:
                 layer.width = self.getHanWidth()
                 layer.shapes = shapeList
 
-        return GSComponent(font.glyphs[aBomb], (0, 0))
+        return GSComponent(aBombGlyph)

@@ -1,0 +1,129 @@
+
+/* Class = "NSTabViewItem"; label = "字符"; ObjectID = "087-tZ-9Gh"; */
+"087-tZ-9Gh.label" = "字符";
+
+/* Class = "NSMenuItem"; title = "5"; ObjectID = "121-tK-fbi"; */
+"121-tK-fbi.title" = "5";
+
+/* Class = "NSButtonCell"; title = "结构匹配"; ObjectID = "1HY-eS-5QH"; */
+"1HY-eS-5QH.title" = "结构匹配";
+
+/* Class = "NSMenuItem"; title = "常用字·汉仪 9k+"; ObjectID = "4dR-hx-mjK"; */
+"4dR-hx-mjK.title" = "常用字·汉仪 9k+";
+
+/* Class = "NSTabViewItem"; label = "推荐"; ObjectID = "76o-D7-ZhL"; */
+"76o-D7-ZhL.label" = "推荐";
+
+/* Class = "NSTabViewItem"; label = "数据源"; ObjectID = "7Mt-C8-OhK"; */
+"7Mt-C8-OhK.label" = "数据源";
+
+/* Class = "NSMenuItem"; title = "> 0%"; ObjectID = "CFG-vy-25m"; */
+"CFG-vy-25m.title" = "> 0%";
+
+/* Class = "NSMenuItem"; title = "下载 CHISE ids 数据包(3type镜像)"; ObjectID = "FZD-vV-Wkw"; */
+"FZD-vV-Wkw.title" = "下载 CHISE ids 数据包(3type镜像)";
+
+/* Class = "NSTextFieldCell"; title = "如使用自制数据，请参考源码datatool中相关数据封包工具，并将idsData.pdata文件放置于插件包内dataset文件夹下"; ObjectID = "Ffk-Fx-age"; */
+"Ffk-Fx-age.title" = "如使用自制数据，请参考源码datatool中相关数据封包工具，并将idsData.pdata文件放置于插件包内dataset文件夹下";
+
+/* Class = "NSTextFieldCell"; placeholderString = "字"; ObjectID = "Kfg-At-WxX"; */
+"Kfg-At-WxX.placeholderString" = "字";
+
+/* Class = "NSTextFieldCell"; title = "⿱"; ObjectID = "Kfg-At-WxX"; */
+"Kfg-At-WxX.title" = "⿱";
+
+/* Class = "NSTabViewItem"; label = "进度"; ObjectID = "Lzc-GB-6xn"; */
+"Lzc-GB-6xn.label" = "进度";
+
+/* Class = "NSMenuItem"; title = "> 50%"; ObjectID = "MPw-0f-xrv"; */
+"MPw-0f-xrv.title" = "> 50%";
+
+/* Class = "NSTextFieldCell"; title = "❓"; ObjectID = "N4c-o0-GT8"; */
+"N4c-o0-GT8.title" = "❓";
+
+/* Class = "NSButtonCell"; title = "计算推荐字☢️"; ObjectID = "Rxh-h4-YHo"; */
+"Rxh-h4-YHo.title" = "计算推荐字☢️";
+
+/* Class = "NSButtonCell"; title = "统计进度"; ObjectID = "Skv-rl-ygS"; */
+"Skv-rl-ygS.title" = "统计进度";
+
+/* Class = "NSMenuItem"; title = "1"; ObjectID = "T6t-NU-cte"; */
+"T6t-NU-cte.title" = "1";
+
+/* Class = "NSMenuItem"; title = "下载 CHISE ids 数据包(github)"; ObjectID = "UP2-s9-9Cd"; */
+"UP2-s9-9Cd.title" = "下载 CHISE ids 数据包(github)";
+
+/* Class = "NSButtonCell"; title = "深度拆解结构式"; ObjectID = "X3y-GN-YLQ"; */
+"X3y-GN-YLQ.title" = "深度拆解结构式";
+
+/* Class = "NSMenuItem"; title = "Big5 12k+"; ObjectID = "X87-bh-YeT"; */
+"X87-bh-YeT.title" = "Big5 12k+";
+
+/* Class = "NSTextFieldCell"; title = "点击进度按钮统计"; ObjectID = "YuG-u4-UYC"; */
+"YuG-u4-UYC.title" = "点击进度按钮统计";
+
+/* Class = "NSMenuItem"; title = "2"; ObjectID = "Yys-jM-zje"; */
+"Yys-jM-zje.title" = "2";
+
+/* Class = "NSMenuItem"; title = "3"; ObjectID = "Zwk-fI-RNa"; */
+"Zwk-fI-RNa.title" = "3";
+
+/* Class = "NSTextFieldCell"; title = "字符集"; ObjectID = "aEI-qE-29S"; */
+"aEI-qE-29S.title" = "字符集";
+
+/* Class = "NSTextFieldCell"; title = "推荐字数"; ObjectID = "c1j-hy-9HO"; */
+"c1j-hy-9HO.title" = "推荐字数";
+
+/* Class = "NSMenuItem"; title = "4"; ObjectID = "c5c-xi-aua"; */
+"c5c-xi-aua.title" = "4";
+
+/* Class = "NSTextFieldCell"; title = "字符信息"; ObjectID = "cXm-ck-Ii8"; */
+"cXm-ck-Ii8.title" = "字符信息";
+
+/* Class = "NSMenuItem"; title = "> 30%"; ObjectID = "f9J-HP-Jnd"; */
+"f9J-HP-Jnd.title" = "> 30%";
+
+/* Class = "NSTextFieldCell"; placeholderString = "3"; ObjectID = "fM2-Lb-3S4"; */
+"fM2-Lb-3S4.placeholderString" = "3";
+
+/* Class = "NSTextFieldCell"; title = "3"; ObjectID = "fM2-Lb-3S4"; */
+"fM2-Lb-3S4.title" = "3";
+
+/* Class = "NSButtonCell"; title = "仅含已绘字符"; ObjectID = "fV5-P5-d26"; */
+"fV5-P5-d26.title" = "仅含已绘字符";
+
+/* Class = "NSTextFieldCell"; title = "笔划完成率"; ObjectID = "guq-a8-LJw"; */
+"guq-a8-LJw.title" = "笔划完成率";
+
+/* Class = "NSMenuItem"; title = "> 70%"; ObjectID = "h9N-0M-48H"; */
+"h9N-0M-48H.title" = "> 70%";
+
+/* Class = "NSTextFieldCell"; title = "App或将失去响应数分钟，请预先保存文件。"; ObjectID = "hDb-KW-kYw"; */
+"hDb-KW-kYw.title" = "App或将失去响应数分钟，请预先保存文件。";
+
+/* Class = "NSTextFieldCell"; placeholderString = "字"; ObjectID = "hRv-5C-I34"; */
+"hRv-5C-I34.placeholderString" = "字";
+
+/* Class = "NSTextFieldCell"; title = "字"; ObjectID = "hRv-5C-I34"; */
+"hRv-5C-I34.title" = "字";
+
+/* Class = "NSButtonCell"; title = "召集/创建部件"; ObjectID = "iOU-ha-pee"; */
+"iOU-ha-pee.title" = "召集/创建部件";
+
+/* Class = "NSMenuItem"; title = "使用本地 ids 数据文件"; ObjectID = "kFC-6y-1bM"; */
+"kFC-6y-1bM.title" = "使用本地 ids 数据文件";
+
+/* Class = "NSMenuItem"; title = "GB2312 6k+"; ObjectID = "nQt-pb-HMO"; */
+"nQt-pb-HMO.title" = "GB2312 6k+";
+
+/* Class = "NSButtonCell"; title = "呼叫姐妹字"; ObjectID = "t8M-pp-AAK"; */
+"t8M-pp-AAK.title" = "呼叫姐妹字";
+
+/* Class = "NSButtonCell"; title = "载入/下载"; ObjectID = "vSG-vB-oYV"; */
+"vSG-vB-oYV.title" = "载入/下载";
+
+/* Class = "NSTextFieldCell"; placeholderString = "3"; ObjectID = "yEQ-M3-XJo"; */
+"yEQ-M3-XJo.placeholderString" = "3";
+
+/* Class = "NSTextFieldCell"; title = "3"; ObjectID = "yEQ-M3-XJo"; */
+"yEQ-M3-XJo.title" = "3";
